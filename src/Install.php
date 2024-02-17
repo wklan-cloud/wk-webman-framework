@@ -12,8 +12,8 @@ class Install
     protected static $pathRelation = [
         'start.php' => 'start.php',
         'windows.php' => 'windows.php',
-        'core/support/bootstrap.php' => 'core/support/Bootstrap.php',
-        'core/support/helpers.php' => 'core/support/Helpers.php',
+        'core/support/Bootstrap.php' => 'core/support/Bootstrap.php',
+        'core/support/Helpers.php' => 'core/support/Helpers.php',
     ];
 
     /**
