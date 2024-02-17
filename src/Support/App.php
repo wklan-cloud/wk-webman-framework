@@ -101,7 +101,7 @@ class App
             }
 
             $worker->onWorkerStart = function ($worker) {
-                require_once base_path() . '/core/support/bootstrap.php';
+                require_once base_path() . '/core/support/Bootstrap.php';
                 $app = new \Webman\App(config('app.request_class', Request::class), Log::channel('default'), app_path(), public_path());
                 $worker->onMessage = [$app, 'onMessage'];
                 call_user_func([$app, 'onWorkerStart'], $worker);
