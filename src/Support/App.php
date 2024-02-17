@@ -21,7 +21,7 @@ class App
      * Run.
      * @return void
      */
-    public static function run()
+    public static function run(): void
     {
         ini_set('display_errors', 'on');
         error_reporting(E_ALL);
@@ -136,7 +136,7 @@ class App
      * @param array $excludes
      * @return void
      */
-    public static function loadAllConfig(array $excludes = [])
+    public static function loadAllConfig(array $excludes = []): void
     {
         Config::load(config_path(), $excludes);
         $directory = base_path() . '/plugin';
@@ -147,5 +147,4 @@ class App
             }
         }
     }
-
 }
