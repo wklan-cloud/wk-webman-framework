@@ -30,21 +30,20 @@ use function str_replace;
 
 class Config
 {
-
     /**
      * @var array
      */
-    protected static $config = [];
+    protected static array $config = [];
 
     /**
      * @var string
      */
-    protected static $configPath = '';
+    protected static string $configPath = '';
 
     /**
      * @var bool
      */
-    protected static $loaded = false;
+    protected static bool $loaded = false;
 
     /**
      * Load.
@@ -53,7 +52,7 @@ class Config
      * @param string|null $key
      * @return void
      */
-    public static function load(string $configPath, array $excludeFile = [], string $key = null)
+    public static function load(string $configPath, array $excludeFile = [], string $key = null): void
     {
         static::$configPath = $configPath;
         if (!$configPath) {
@@ -82,7 +81,7 @@ class Config
      * @return void
      * @deprecated
      */
-    public static function reload(string $configPath, array $excludeFile = [])
+    public static function reload(string $configPath, array $excludeFile = []): void
     {
         static::load($configPath, $excludeFile);
     }
@@ -91,7 +90,7 @@ class Config
      * Clear.
      * @return void
      */
-    public static function clear()
+    public static function clear(): void
     {
         static::$config = [];
     }
@@ -100,7 +99,7 @@ class Config
      * FormatConfig.
      * @return void
      */
-    protected static function formatConfig()
+    protected static function formatConfig(): void
     {
         $config = static::$config;
         // Merge log config
@@ -218,10 +217,10 @@ class Config
     /**
      * Get.
      * @param string|null $key
-     * @param mixed $default
+     * @param mixed|null $default
      * @return array|mixed|void|null
      */
-    public static function get(string $key = null, $default = null)
+    public static function get(string $key = null, mixed $default = null)
     {
         if ($key === null) {
             return static::$config;
@@ -248,10 +247,10 @@ class Config
     /**
      * Read.
      * @param string $key
-     * @param mixed $default
+     * @param mixed|null $default
      * @return array|mixed|null
      */
-    protected static function read(string $key, $default = null)
+    protected static function read(string $key, mixed $default = null): mixed
     {
         $path = static::$configPath;
         if ($path === '') {
@@ -278,7 +277,7 @@ class Config
      * @param mixed $default
      * @return array|mixed
      */
-    protected static function find(array $keyArray, $stack, $default)
+    protected static function find(array $keyArray, mixed $stack, mixed $default): mixed
     {
         if (!is_array($stack)) {
             return $default;

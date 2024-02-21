@@ -2,15 +2,15 @@
 
 namespace Support;
 
-use Dotenv\Dotenv;
-use RuntimeException;
-use Webman\Config;
 use Webman\Util;
-use Workerman\Connection\TcpConnection;
+use Dotenv\Dotenv;
+use Webman\Config;
+use RuntimeException;
 use Workerman\Worker;
+use Workerman\Connection\TcpConnection;
+use function is_dir;
 use function base_path;
 use function call_user_func;
-use function is_dir;
 use function opcache_get_status;
 use function opcache_invalidate;
 use const DIRECTORY_SEPARATOR;
@@ -19,13 +19,11 @@ class App
 {
     /**
      * Run.
+     *
      * @return void
      */
     public static function run(): void
     {
-        ini_set('display_errors', 'on');
-        error_reporting(E_ALL);
-
         if (class_exists(Dotenv::class) && file_exists(run_path('.env'))) {
             if (method_exists(Dotenv::class, 'createUnsafeImmutable')) {
                 Dotenv::createUnsafeImmutable(run_path())->load();
@@ -33,12 +31,11 @@ class App
                 Dotenv::createMutable(run_path())->load();
             }
         }
-
         static::loadAllConfig(['route', 'container']);
-
-        $errorReporting = config('app.error_reporting');
-        if (isset($errorReporting)) {
-            error_reporting($errorReporting);
+        $appEnv = config('app.app_env');
+        if (isset($appEnv) && $appEnv != 'prod') {
+            ini_set('display_errors', 'on');
+            error_reporting(E_ALL);
         }
         if ($timezone = config('app.default_timezone')) {
             date_default_timezone_set($timezone);
@@ -70,6 +67,8 @@ class App
             }
         };
 
+        require_once base_path('core/support/Bootstrap.php'); //euper +
+
         $config = config('server');
         Worker::$pidFile = $config['pid_file'];
         Worker::$stdoutFile = $config['stdout_file'];
@@ -92,7 +91,7 @@ class App
                 'group',
                 'reusePort',
                 'transport',
-                'protocol'
+                'protocol',
             ];
             foreach ($propertyMap as $property) {
                 if (isset($config[$property])) {
@@ -101,8 +100,8 @@ class App
             }
 
             $worker->onWorkerStart = function ($worker) {
-                require_once base_path() . '/core/support/Bootstrap.php';
-                $app = new \Webman\App(config('app.request_class', Request::class), Log::channel('default'), app_path(), public_path());
+                //require_once base_path('core/support/Bootstrap.php');
+                $app = new \Webman\App(Request::class, Log::channel('default'), app_path(), public_path());
                 $worker->onMessage = [$app, 'onMessage'];
                 call_user_func([$app, 'onWorkerStart'], $worker);
             };
@@ -133,6 +132,7 @@ class App
 
     /**
      * LoadAllConfig.
+     *
      * @param array $excludes
      * @return void
      */

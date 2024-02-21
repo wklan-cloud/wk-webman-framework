@@ -1,16 +1,15 @@
 <?php
+
 /**
- * This file is part of webman.
+ * This file is part of the wklan project.
  *
- * Licensed under The MIT License
- * For full copyright and license information, please see the MIT-LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
+ * (c) euper <wklan@proton.me>
  *
- * @author    walkor<walkor@workerman.net>
- * @copyright walkor<walkor@workerman.net>
- * @link      http://www.workerman.net/
- * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Webman;
 
@@ -23,18 +22,17 @@ use function method_exists;
 
 class Middleware
 {
-
     /**
      * @var array
      */
-    protected static $instances = [];
+    protected static array $instances = [];
 
     /**
      * @param mixed $allMiddlewares
      * @param string $plugin
      * @return void
      */
-    public static function load($allMiddlewares, string $plugin = '')
+    public static function load(mixed $allMiddlewares, string $plugin = ''): void
     {
         if (!is_array($allMiddlewares)) {
             return;
@@ -46,7 +44,7 @@ class Middleware
             if ($appName === '@') {
                 $plugin = '';
             }
-            if (strpos($appName, 'plugin.') !== false) {
+            if (str_contains($appName, 'plugin.')) {
                 $explode = explode('.', $appName, 4);
                 $plugin = $explode[1];
                 $appName = $explode[2] ?? '';
@@ -56,7 +54,7 @@ class Middleware
                     static::$instances[$plugin][$appName][] = [$className, 'process'];
                 } else {
                     // @todo Log
-                    echo "middleware $className::process not exsits\n";
+                    echo "middleware $className::process not exists\n";
                 }
             }
         }
@@ -66,9 +64,9 @@ class Middleware
      * @param string $plugin
      * @param string $appName
      * @param bool $withGlobalMiddleware
-     * @return array|mixed
+     * @return array
      */
-    public static function getMiddleware(string $plugin, string $appName, bool $withGlobalMiddleware = true)
+    public static function getMiddleware(string $plugin, string $appName, bool $withGlobalMiddleware = true): array
     {
         $globalMiddleware = static::$instances['']['@'] ?? [];
         $appGlobalMiddleware = $withGlobalMiddleware && isset(static::$instances[$plugin]['']) ? static::$instances[$plugin][''] : [];

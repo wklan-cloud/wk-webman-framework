@@ -1,16 +1,15 @@
 <?php
+
 /**
- * This file is part of webman.
+ * This file is part of the wklan project.
  *
- * Licensed under The MIT License
- * For full copyright and license information, please see the MIT-LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
+ * (c) euper <wklan@proton.me>
  *
- * @author    walkor<walkor@workerman.net>
- * @copyright walkor<walkor@workerman.net>
- * @link      http://www.workerman.net/
- * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
+//declare(strict_types=1);
 
 namespace Webman;
 
@@ -64,39 +63,39 @@ class Route
     /**
      * @var array
      */
-    protected static $nameList = [];
+    protected static array $nameList = [];
 
     /**
      * @var string
      */
-    protected static $groupPrefix = '';
+    protected static string $groupPrefix = '';
 
     /**
      * @var bool
      */
-    protected static $disableDefaultRoute = [];
+    protected static array|bool $disableDefaultRoute = [];
 
     /**
      * @var RouteObject[]
      */
-    protected static $allRoutes = [];
+    protected static array $allRoutes = [];
 
     /**
      * @var RouteObject[]
      */
-    protected $routes = [];
+    protected array $routes = [];
 
     /**
      * @var Route[]
      */
-    protected $children = [];
+    protected array $children = [];
 
     /**
      * @param string $path
      * @param callable|mixed $callback
      * @return RouteObject
      */
-    public static function get(string $path, $callback): RouteObject
+    public static function get(string $path, mixed $callback): RouteObject
     {
         return static::addRoute('GET', $path, $callback);
     }
@@ -106,7 +105,7 @@ class Route
      * @param callable|mixed $callback
      * @return RouteObject
      */
-    public static function post(string $path, $callback): RouteObject
+    public static function post(string $path, mixed $callback): RouteObject
     {
         return static::addRoute('POST', $path, $callback);
     }
@@ -116,7 +115,7 @@ class Route
      * @param callable|mixed $callback
      * @return RouteObject
      */
-    public static function put(string $path, $callback): RouteObject
+    public static function put(string $path, mixed $callback): RouteObject
     {
         return static::addRoute('PUT', $path, $callback);
     }
@@ -126,7 +125,7 @@ class Route
      * @param callable|mixed $callback
      * @return RouteObject
      */
-    public static function patch(string $path, $callback): RouteObject
+    public static function patch(string $path, mixed $callback): RouteObject
     {
         return static::addRoute('PATCH', $path, $callback);
     }
@@ -136,7 +135,7 @@ class Route
      * @param callable|mixed $callback
      * @return RouteObject
      */
-    public static function delete(string $path, $callback): RouteObject
+    public static function delete(string $path, mixed $callback): RouteObject
     {
         return static::addRoute('DELETE', $path, $callback);
     }
@@ -146,7 +145,7 @@ class Route
      * @param callable|mixed $callback
      * @return RouteObject
      */
-    public static function head(string $path, $callback): RouteObject
+    public static function head(string $path, mixed $callback): RouteObject
     {
         return static::addRoute('HEAD', $path, $callback);
     }
@@ -156,7 +155,7 @@ class Route
      * @param callable|mixed $callback
      * @return RouteObject
      */
-    public static function options(string $path, $callback): RouteObject
+    public static function options(string $path, mixed $callback): RouteObject
     {
         return static::addRoute('OPTIONS', $path, $callback);
     }
@@ -166,7 +165,7 @@ class Route
      * @param callable|mixed $callback
      * @return RouteObject
      */
-    public static function any(string $path, $callback): RouteObject
+    public static function any(string $path, mixed $callback): RouteObject
     {
         return static::addRoute(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'], $path, $callback);
     }
@@ -177,17 +176,17 @@ class Route
      * @param callable|mixed $callback
      * @return RouteObject
      */
-    public static function add($method, string $path, $callback): RouteObject
+    public static function add($method, string $path, mixed $callback): RouteObject
     {
         return static::addRoute($method, $path, $callback);
     }
 
     /**
-     * @param string|callable $path
+     * @param callable|string $path
      * @param callable|null $callback
      * @return static
      */
-    public static function group($path, callable $callback = null): Route
+    public static function group(callable|string $path, callable $callback = null): Route
     {
         if ($callback === null) {
             $callback = $path;
@@ -212,7 +211,7 @@ class Route
      * @param array $options
      * @return void
      */
-    public static function resource(string $name, string $controller, array $options = [])
+    public static function resource(string $name, string $controller, array $options = []): void
     {
         $name = trim($name, '/');
         if (is_array($options) && !empty($options)) {
@@ -257,7 +256,7 @@ class Route
      *
      * @return void
      */
-    public static function disableDefaultRoute($plugin = '')
+    public static function disableDefaultRoute($plugin = ''): void
     {
         static::$disableDefaultRoute[$plugin] = true;
     }
@@ -289,7 +288,7 @@ class Route
     /**
      * @param RouteObject $route
      */
-    public function collect(RouteObject $route)
+    public function collect(RouteObject $route): void
     {
         $this->routes[] = $route;
     }
@@ -298,7 +297,7 @@ class Route
      * @param string $name
      * @param RouteObject $instance
      */
-    public static function setByName(string $name, RouteObject $instance)
+    public static function setByName(string $name, RouteObject $instance): void
     {
         static::$nameList[$name] = $instance;
     }
@@ -316,7 +315,7 @@ class Route
      * @param Route $route
      * @return void
      */
-    public function addChild(Route $route)
+    public function addChild(Route $route): void
     {
         $this->children[] = $route;
     }
@@ -324,7 +323,7 @@ class Route
     /**
      * @return Route[]
      */
-    public function getChildren()
+    public function getChildren(): array
     {
         return $this->children;
     }
@@ -344,7 +343,7 @@ class Route
      * @param callable|mixed $callback
      * @return callable|false|string[]
      */
-    public static function convertToCallable(string $path, $callback)
+    public static function convertToCallable(string $path, mixed $callback): array|callable|false
     {
         if (is_string($callback) && strpos($callback, '@')) {
             $callback = explode('@', $callback, 2);
@@ -373,7 +372,7 @@ class Route
      * @param callable|mixed $callback
      * @return RouteObject
      */
-    protected static function addRoute($methods, string $path, $callback): RouteObject
+    protected static function addRoute(array|string $methods, string $path, mixed $callback): RouteObject
     {
         $route = new RouteObject($methods, static::$groupPrefix . $path, $callback);
         static::$allRoutes[] = $route;
@@ -392,7 +391,7 @@ class Route
      * @param mixed $paths
      * @return void
      */
-    public static function load($paths)
+    public static function load(mixed $paths): void
     {
         if (!is_array($paths)) {
             return;
@@ -432,7 +431,7 @@ class Route
      * @param RouteCollector $route
      * @return void
      */
-    public static function setCollector(RouteCollector $route)
+    public static function setCollector(RouteCollector $route): void
     {
         static::$collector = $route;
     }
@@ -443,7 +442,7 @@ class Route
      * @param string $plugin
      * @return void
      */
-    public static function fallback(callable $callback, string $plugin = '')
+    public static function fallback(callable $callback, string $plugin = ''): void
     {
         static::$fallback[$plugin] = $callback;
     }

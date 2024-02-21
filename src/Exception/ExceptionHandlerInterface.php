@@ -20,10 +20,6 @@ use Webman\Http\Response;
 
 interface ExceptionHandlerInterface
 {
-    /**
-     * @param Throwable $exception
-     * @return mixed
-     */
     public function report(Throwable $exception);
 
     /**

@@ -28,7 +28,6 @@ use function umask;
 
 class File extends SplFileInfo
 {
-
     /**
      * Move.
      * @param string $destination

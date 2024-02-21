@@ -1,16 +1,15 @@
 <?php
+
 /**
- * This file is part of webman.
+ * This file is part of the wklan project.
  *
- * Licensed under The MIT License
- * For full copyright and license information, please see the MIT-LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
+ * (c) euper <wklan@proton.me>
  *
- * @author    walkor<walkor@workerman.net>
- * @copyright walkor<walkor@workerman.net>
- * @link      http://www.workerman.net/
- * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Support;
 
@@ -208,7 +207,6 @@ use function in_array;
  */
 class Redis
 {
-
     /**
      * @var RedisManager
      */
@@ -217,7 +215,7 @@ class Redis
     /**
      * need to install phpredis extension
      */
-    const PHPREDIS_CLIENT = 'phpredis';
+    const PHP_REDIS_CLIENT = 'phpredis';
 
     /**
      * need to install the 'predis/predis' packgage.
@@ -228,22 +226,19 @@ class Redis
     /**
      * Support client collection
      */
-    static $allowClient = [
-        self::PHPREDIS_CLIENT,
+    static array $allowClient = [
+        self::PHP_REDIS_CLIENT,
         self::PREDIS_CLIENT
     ];
 
-    /**
-     * @return RedisManager
-     */
     public static function instance(): ?RedisManager
     {
         if (!static::$instance) {
             $config = config('redis');
-            $client = $config['client'] ?? self::PHPREDIS_CLIENT;
+            $client = $config['client'] ?? self::PHP_REDIS_CLIENT;
 
             if (!in_array($client, static::$allowClient)) {
-                $client = self::PHPREDIS_CLIENT;
+                $client = self::PHP_REDIS_CLIENT;
             }
 
             static::$instance = new RedisManager('', $client, $config);
@@ -260,6 +255,7 @@ class Redis
     {
         static $timers = [];
         $connection = static::instance()->connection($name);
+        dd($connection);
         if (!isset($timers[$name])) {
             $timers[$name] = Worker::getAllWorkers() ? Timer::add(55, function () use ($connection) {
                 $connection->get('ping');

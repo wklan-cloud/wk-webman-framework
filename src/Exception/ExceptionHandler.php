@@ -28,20 +28,17 @@ use function trim;
  */
 class ExceptionHandler implements ExceptionHandlerInterface
 {
-    /**
-     * @var LoggerInterface
-     */
     protected $logger = null;
 
     /**
      * @var bool
      */
-    protected $debug = false;
+    protected bool $debug = FALSE;
 
     /**
      * @var array
      */
-    public $dontReport = [];
+    public array $dontReport = [];
 
     /**
      * ExceptionHandler constructor.
@@ -54,14 +51,10 @@ class ExceptionHandler implements ExceptionHandlerInterface
         $this->debug = $debug;
     }
 
-    /**
-     * @param Throwable $exception
-     * @return void
-     */
     public function report(Throwable $exception)
     {
         if ($this->shouldntReport($exception)) {
-            return;
+            return null;
         }
         $logs = '';
         if ($request = \request()) {
@@ -96,10 +89,10 @@ class ExceptionHandler implements ExceptionHandlerInterface
     {
         foreach ($this->dontReport as $type) {
             if ($e instanceof $type) {
-                return true;
+                return TRUE;
             }
         }
-        return false;
+        return FALSE;
     }
 
     /**

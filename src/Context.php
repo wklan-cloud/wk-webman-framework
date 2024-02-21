@@ -32,7 +32,6 @@ use function property_exists;
  */
 class Context
 {
-
     /**
      * @var SplObjectStorage|WeakMap
      */
@@ -62,7 +61,7 @@ class Context
     /**
      * @return mixed
      */
-    protected static function getKey()
+    protected static function getKey(): mixed
     {
         switch (Worker::$eventLoopClass) {
             case Revolt::class:
@@ -79,7 +78,7 @@ class Context
      * @param string|null $key
      * @return mixed
      */
-    public static function get(string $key = null)
+    public static function get(string $key = null): mixed
     {
         $obj = static::getObject();
         if ($key === null) {

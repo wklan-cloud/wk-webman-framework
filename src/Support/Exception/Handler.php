@@ -25,14 +25,9 @@ use Webman\Http\Response;
  */
 class Handler extends ExceptionHandler
 {
-    public $dontReport = [
+    public array $dontReport = [
         BusinessException::class,
     ];
-
-    public function report(Throwable $exception)
-    {
-        parent::report($exception);
-    }
 
     public function render(Request $request, Throwable $exception): Response
     {
